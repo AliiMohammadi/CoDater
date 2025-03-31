@@ -1,0 +1,8 @@
+C:\Users\TUF laptop\Desktop\CoDater\CrossUpdater\bin\Debug\CrossUpdater.exe.config
+C:\Users\TUF laptop\Desktop\CoDater\CrossUpdater\bin\Debug\CrossUpdater.exe
+C:\Users\TUF laptop\Desktop\CoDater\CrossUpdater\bin\Debug\CrossUpdater.pdb
+C:\Users\TUF laptop\Desktop\CoDater\CrossUpdater\obj\Debug\CrossUpdater.csproj.AssemblyReference.cache
+C:\Users\TUF laptop\Desktop\CoDater\CrossUpdater\obj\Debug\CrossUpdater.csproj.SuggestedBindingRedirects.cache
+C:\Users\TUF laptop\Desktop\CoDater\CrossUpdater\obj\Debug\CrossUpdater.csproj.CoreCompileInputs.cache
+C:\Users\TUF laptop\Desktop\CoDater\CrossUpdater\obj\Debug\CrossUpdater.exe
+C:\Users\TUF laptop\Desktop\CoDater\CrossUpdater\obj\Debug\CrossUpdater.pdb
