@@ -11,7 +11,10 @@ namespace SaveAndRetrieve
         {
             public void SaveData(object value,string path)
             {
-                File.WriteAllText(path, new JavaScriptSerializer().Serialize(value));
+                JavaScriptSerializer s = new JavaScriptSerializer();
+                s.RecursionLimit = 200;
+                string Content = s.Serialize(value);
+                File.WriteAllText(path, Content);
             }
             public void AppendData(object value, string path)
             {

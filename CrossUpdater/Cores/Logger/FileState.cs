@@ -14,14 +14,20 @@ namespace CoDater.Logger
             UnChanged,Changed,Added,Removed
         }
 
-        public FileInfo Fileinfo { get; set; }
+        public string Name { get; set; }
+        public string Fullname { get; set; }
+        public DateTime LastWriteTime { get; set; }
+        public long Length { get; set; }
+
         public FileStatus Status { get; set; }
 
         public FileState(FileInfo file, FileStatus status)
         {
-            this.Status = status;
-            Fileinfo = file;
+            Name = file.Name;
+            Fullname = file.FullName;
+            LastWriteTime = file.LastWriteTime;
+            Length = file.Length;
+            Status = status;
         }
-
     }
 }

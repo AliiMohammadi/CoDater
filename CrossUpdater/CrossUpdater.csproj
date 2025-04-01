@@ -44,9 +44,6 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Cores\Logger\Comparer\ReadWholeFileAtOnceCompareEightByteAtOnce.cs" />
-    <Compile Include="Cores\Logger\Comparer\ReadWholeFileAtOnce.cs" />
-    <Compile Include="Cores\Logger\Comparer\FileComparer.cs" />
     <Compile Include="Cores\Logger\FileState.cs" />
     <Compile Include="Cores\Logger\Reporter.cs" />
     <Compile Include="Cores\Logger\ReportInfo.cs" />

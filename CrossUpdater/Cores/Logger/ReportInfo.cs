@@ -23,14 +23,11 @@ namespace CoDater.Logger
         public int Version { get; set; }
         public List<FileState> Files { get; set; }
 
+
         void ConvertFileInfoToFileState(List<FileInfo> files)
         {
             foreach (var item in files)
                 Files.Add(new FileState(item, FileState.FileStatus.UnChanged));
-        }
-        public List<FileInfo> GetOnlyFileInfo()
-        {
-            return Files.Select(f=>f.Fileinfo).ToList();
         }
     }
 }

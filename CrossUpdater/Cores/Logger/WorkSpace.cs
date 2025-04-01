@@ -12,7 +12,7 @@ namespace CoDater.Logger
             get { return AppDomain.CurrentDomain.BaseDirectory; }
         }
 
-        public List<FileInfo> GetFiles
+        public List<FileInfo> GetAllFilesAndSubFolderFiles
         {
             get
             {

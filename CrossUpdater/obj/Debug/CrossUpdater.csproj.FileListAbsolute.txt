@@ -6,3 +6,10 @@ C:\Users\TUF laptop\Desktop\CoDater\CrossUpdater\obj\Debug\CrossUpdater.csproj.S
 C:\Users\TUF laptop\Desktop\CoDater\CrossUpdater\obj\Debug\CrossUpdater.csproj.CoreCompileInputs.cache
 C:\Users\TUF laptop\Desktop\CoDater\CrossUpdater\obj\Debug\CrossUpdater.exe
 C:\Users\TUF laptop\Desktop\CoDater\CrossUpdater\obj\Debug\CrossUpdater.pdb
+D:\Developing\Application Projects\CoDater\CrossUpdater\bin\Debug\CrossUpdater.exe.config
+D:\Developing\Application Projects\CoDater\CrossUpdater\bin\Debug\CrossUpdater.exe
+D:\Developing\Application Projects\CoDater\CrossUpdater\bin\Debug\CrossUpdater.pdb
+D:\Developing\Application Projects\CoDater\CrossUpdater\obj\Debug\CrossUpdater.csproj.AssemblyReference.cache
+D:\Developing\Application Projects\CoDater\CrossUpdater\obj\Debug\CrossUpdater.csproj.CoreCompileInputs.cache
+D:\Developing\Application Projects\CoDater\CrossUpdater\obj\Debug\CrossUpdater.exe
+D:\Developing\Application Projects\CoDater\CrossUpdater\obj\Debug\CrossUpdater.pdb
