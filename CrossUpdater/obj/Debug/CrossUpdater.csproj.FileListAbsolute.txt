@@ -13,3 +13,11 @@ D:\Developing\Application Projects\CoDater\CrossUpdater\obj\Debug\CrossUpdater.c
 D:\Developing\Application Projects\CoDater\CrossUpdater\obj\Debug\CrossUpdater.csproj.CoreCompileInputs.cache
 D:\Developing\Application Projects\CoDater\CrossUpdater\obj\Debug\CrossUpdater.exe
 D:\Developing\Application Projects\CoDater\CrossUpdater\obj\Debug\CrossUpdater.pdb
+D:\Developing\CoDater\CrossUpdater\obj\Debug\CrossUpdater.csproj.AssemblyReference.cache
+D:\Developing\CoDater\CrossUpdater\obj\Debug\CrossUpdater.csproj.SuggestedBindingRedirects.cache
+D:\Developing\CoDater\CrossUpdater\obj\Debug\CrossUpdater.csproj.CoreCompileInputs.cache
+D:\Developing\CoDater\CrossUpdater\obj\Debug\CrossUpdater.exe
+D:\Developing\CoDater\CrossUpdater\obj\Debug\CrossUpdater.pdb
+D:\Developing\CoDater\CrossUpdater\bin\Debug\CrossUpdater.exe.config
+D:\Developing\CoDater\CrossUpdater\bin\Debug\CrossUpdater.exe
+D:\Developing\CoDater\CrossUpdater\bin\Debug\CrossUpdater.pdb

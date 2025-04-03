@@ -43,6 +43,9 @@ namespace CoDater.Logger
             ReportInfo Lastversion = loadedReport[loadedReport.Count - 1];
             ReportInfo NewVersion = GetChanges(Lastversion, CurrentVersion);
 
+            if(NewVersion.ChangesCount == 0)
+                throw new Exception("No changes detected.");
+
             loadedReport.Add(NewVersion);
 
             SaveLoad.SaveData(loadedReport, datapath);
@@ -51,34 +54,49 @@ namespace CoDater.Logger
         }
         public ReportInfo GetChanges(ReportInfo LastReport , List<FileInfo> CurrentFiles)
         {
-            ReportInfo FinalReport = new ReportInfo(new List<FileInfo>(),DateTime.Now,LastReport.Version++);
+            ReportInfo result = new ReportInfo(new List<FileInfo>(), DateTime.Now, LastReport.Version++);
 
             //Version check steps:
             //1: Deleted files check.
             //2: New files check.
             //3: Moded files check.
 
-            List<FileInfo> LastReportfiles = LastReport.GetOnlyFileInfo();
+            List<FileState> LastReportfiles = LastReport.Files;
+            List<FileInfo> LastReportfilesCONVERTED = ConvertSTATEtoINFO(LastReportfiles);
 
             //Determining the moded files.
+            //A funtion that Gives two FileInfo list. 
+            //
+            //الان این فایل هایی رو برمیگردون که اصلا تغییر نکردن
+            List<FileInfo> LastRemainedFiles = Intersect(LastReportfilesCONVERTED, CurrentFiles); 
+            List<FileInfo> CurrentRemainedFiles = Intersect( CurrentFiles, LastReportfilesCONVERTED);
 
             foreach (FileInfo lastfile in LastReportfiles)
             {
-                FileInfo CurretnFoundedFile = FindFileByName(GetCurrentRemainedFiles(LastReportfiles, CurrentFiles), lastfile.Name);
+                FileInfo CurretnFoundedFile = FindFileByFullName(CurrentRemainedFiles, lastfile.FullName);
 
                 if (!AreSameFiles(lastfile, CurretnFoundedFile))
-                    FinalReport.Files.Add(new FileState(CurretnFoundedFile, FileState.FileStatus.Changed));
+                {
+                    result.Files.Add(new FileState(CurretnFoundedFile, FileState.FileStatus.Changed));
+                    result.ModedFileCount++;
+                }
                 else
-                    FinalReport.Files.Add(new FileState(CurretnFoundedFile, FileState.FileStatus.UnChanged));
+                    result.Files.Add(new FileState(CurretnFoundedFile, FileState.FileStatus.UnChanged));
             }
-            
-            //Determin the deleted files and Added files
-            foreach (FileInfo item in GetAddedFiles(LastReportfiles, CurrentFiles))
-                FinalReport.Files.Add(new FileState(item, FileState.FileStatus.Added));
-            foreach (FileInfo item in GetDeletedFiles(LastReportfiles, CurrentFiles))
-                FinalReport.Files.Add(new FileState(item, FileState.FileStatus.Removed));
 
-            return FinalReport;
+            //Determin the deleted files and Added files
+            foreach (FileInfo item in GetAddedFiles(LastReportfilesCONVERTED, CurrentFiles))
+            {
+                result.Files.Add(new FileState(item, FileState.FileStatus.Added));
+                result.AddedFilesCount++;
+            }
+            foreach (FileInfo item in GetDeletedFiles(LastReportfilesCONVERTED, CurrentFiles))
+            {
+                result.Files.Add(new FileState(item, FileState.FileStatus.Removed));
+                result.DeletedFileCount++;
+            }
+
+            return result;
         }
 
         public bool AreSameFiles(string file1, string file2)
@@ -109,18 +127,48 @@ namespace CoDater.Logger
             return Exept(LastReportfiles, CurrentFiles);
         }
 
-        List<FileInfo> Intersect(List<FileInfo> l1, List<FileInfo> l2)
+        public List<FileInfo> Intersect(List<FileInfo> l1, List<FileInfo> l2)
         {
-            return l1.Intersect(l2).ToList();
+            List<string> ls1 = l1.Select(l => l.FullName).ToList();
+            List<string> ls2 = l2.Select(l => l.FullName).ToList();
+
+            List<string> lsex = ls1.Intersect(ls2).ToList();
+
+            List<FileInfo> final = new List<FileInfo>();
+
+            foreach (string l in lsex)
+            //{
+            //    FileInfo y = l1.Where(x => x.FullName == l).First();
+
+            //    if(AreSameFiles(y, l2.Where(x => x.FullName == l).First()))
+            //final.Add(y);
+
+            //}
+            final.Add(l1.Where(x => x.FullName == l).First());
+
+
+            return final;
         }
-        List<FileInfo> Exept(List<FileInfo> l1, List<FileInfo> l2)
+        public List<FileInfo> Exept(List<FileInfo> l1, List<FileInfo> l2)
         {
+            //THIS FUNTION NEEDS TO UNIT TEST
+            //The funtion have issues. Need to fix.
             return l1.Except(l2).ToList();
         }
 
-        FileInfo FindFileByName(List<FileInfo> files,string filename)
+        FileInfo FindFileByFullName(List<FileInfo> files,string fullname)
         {
-            return files.Where(x => Equals(x.Name, filename)).First();
+            return files.Where(x => Equals(x.FullName, fullname)).First();
+        }
+
+        public List<FileInfo> ConvertSTATEtoINFO(List<FileState> state)
+        {
+            List<FileInfo> newlist = new List<FileInfo>();
+
+            foreach(FileState l in state)
+                newlist.Add(new FileInfo(l.FullName));
+
+            return newlist;
         }
         #endregion
     }

@@ -44,6 +44,8 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Cores\Logger\ChangeInfo.cs" />
+    <Compile Include="Cores\Logger\FileInfo.cs" />
     <Compile Include="Cores\Logger\FileState.cs" />
     <Compile Include="Cores\Logger\Reporter.cs" />
     <Compile Include="Cores\Logger\ReportInfo.cs" />

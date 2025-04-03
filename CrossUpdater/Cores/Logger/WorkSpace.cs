@@ -5,11 +5,13 @@ using System.Collections.Generic;
 
 namespace CoDater.Logger
 {
-    public class WorkSpace
+    internal class WorkSpace
     {
         public string GetPath
         {
-            get { return AppDomain.CurrentDomain.BaseDirectory; }
+            get { //return AppDomain.CurrentDomain.BaseDirectory;
+                return @"D:\Projecrt\"; 
+                  }
         }
 
         public List<FileInfo> GetAllFilesAndSubFolderFiles

@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace CoDater.Logger
 {
-    internal class ReportInfo
+    internal class ReportInfo : ChangeInfo
     {
         public ReportInfo()
         {
@@ -22,7 +22,6 @@ namespace CoDater.Logger
         public DateTime Date { get; set; }
         public int Version { get; set; }
         public List<FileState> Files { get; set; }
-
 
         void ConvertFileInfoToFileState(List<FileInfo> files)
         {
