@@ -9,15 +9,18 @@ namespace CoDater.Logger
         public DateTime LastWriteTime { get; set; }
         public long Length { get; set; }
 
-        public FileInfo() { }
+        public FileInfo() 
+        {
+
+        }
         public FileInfo(string file)
         {
+            
             System.IO.FileInfo info = new System.IO.FileInfo(file);
             Name = info.Name;
             FullName = info.FullName;
             LastWriteTime = info.LastWriteTime;
             Length = info.Length;
-
         }
     }
 }

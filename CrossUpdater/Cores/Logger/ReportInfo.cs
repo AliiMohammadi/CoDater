@@ -9,6 +9,10 @@ namespace CoDater.Logger
 {
     internal class ReportInfo : ChangeInfo
     {
+        public DateTime Date { get; set; }
+        public int Version { get; set; }
+        public List<FileState> Files { get; set; }
+
         public ReportInfo()
         {
             Files = new List<FileState>();
@@ -16,12 +20,10 @@ namespace CoDater.Logger
         public ReportInfo(List<FileInfo> files,DateTime date,int version)
         {
             Files = new List<FileState>();
+            Date = date;
+            Version = version;
             ConvertFileInfoToFileState(files);
         }
-
-        public DateTime Date { get; set; }
-        public int Version { get; set; }
-        public List<FileState> Files { get; set; }
 
         void ConvertFileInfoToFileState(List<FileInfo> files)
         {

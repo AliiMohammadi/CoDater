@@ -10,8 +10,8 @@ namespace CoDater.Logger
         public string GetPath
         {
             get { //return AppDomain.CurrentDomain.BaseDirectory;
-                return @"D:\Projecrt\"; 
-                  }
+                return @"D:\Project\"; 
+                }
         }
 
         public List<FileInfo> GetAllFilesAndSubFolderFiles

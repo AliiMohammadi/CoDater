@@ -54,25 +54,27 @@ namespace CoDater.Logger
         }
         public ReportInfo GetChanges(ReportInfo LastReport , List<FileInfo> CurrentFiles)
         {
-            ReportInfo result = new ReportInfo(new List<FileInfo>(), DateTime.Now, LastReport.Version++);
+            ReportInfo result = new ReportInfo(new List<FileInfo>(), DateTime.Now, ++LastReport.Version);
 
             //Version check steps:
             //1: Deleted files check.
             //2: New files check.
             //3: Moded files check.
 
-            List<FileState> LastReportfiles = LastReport.Files;
+            List<FileState> LastReportfiles = LastReport.Files.Where(x=>x.Status!=FileState.FileStatus.Removed).ToList();
             List<FileInfo> LastReportfilesCONVERTED = ConvertSTATEtoINFO(LastReportfiles);
 
             //Determining the moded files.
             //A funtion that Gives two FileInfo list. 
-            //
             //الان این فایل هایی رو برمیگردون که اصلا تغییر نکردن
-            List<FileInfo> LastRemainedFiles = Intersect(LastReportfilesCONVERTED, CurrentFiles); 
-            List<FileInfo> CurrentRemainedFiles = Intersect( CurrentFiles, LastReportfilesCONVERTED);
+
+            List<FileInfo> CurrentRemainedFiles = GetCurrentRemainedFiles(CurrentFiles, LastReportfilesCONVERTED);
 
             foreach (FileInfo lastfile in LastReportfiles)
             {
+                if (!CurrentRemainedFiles.Exists(x => x.FullName == lastfile.FullName))
+                    continue;
+
                 FileInfo CurretnFoundedFile = FindFileByFullName(CurrentRemainedFiles, lastfile.FullName);
 
                 if (!AreSameFiles(lastfile, CurretnFoundedFile))
@@ -99,76 +101,85 @@ namespace CoDater.Logger
             return result;
         }
 
-        public bool AreSameFiles(string file1, string file2)
+        #region Local Funtions
+        bool AreSameFiles(FileInfo file1,FileInfo file2)
         {
-            return AreSameFiles(new FileInfo(file1),new FileInfo(file2));
-        }
-        public bool AreSameFiles(FileInfo file1,FileInfo file2)
-        {
-            if(string.Equals(file1.Name,file2.Name))
-                if (file1.LastWriteTime == file2.LastWriteTime)
+            if (string.Equals(file1.Name,file2.Name))
+                if (AreSameDates(file1.LastWriteTime.ToLocalTime(), file2.LastWriteTime))
                     if(file1.Length == file2.Length)
                         return true;
 
             return false;
         }
-
-        #region Local Funtions
-        List<FileInfo> GetCurrentRemainedFiles(List<FileInfo> LastReportfiles, List<FileInfo> CurrentFiles)
+        bool AreSameDates(DateTime d1, DateTime d2)
         {
-            return Intersect(CurrentFiles, Intersect(LastReportfiles, CurrentFiles));
+            return (d1.Year == d2.Year && d1.Month == d2.Month && d1.Day == d2.Day && d1.Hour == d2.Hour && d1.Minute == d2.Minute);
+        }
+
+        List<FileInfo> GetCurrentRemainedFiles(List<FileInfo> CurrentFiles, List<FileInfo> LastReportfilesCONVERTED)
+        {
+            return Intersect(CurrentFiles, LastReportfilesCONVERTED); 
         }
         List<FileInfo> GetAddedFiles(List<FileInfo> LastReportfiles, List<FileInfo> CurrentFiles)
         {
-            return Exept(CurrentFiles,LastReportfiles);
+            return Except(CurrentFiles,LastReportfiles);
         }
         List<FileInfo> GetDeletedFiles(List<FileInfo> LastReportfiles, List<FileInfo> CurrentFiles)
         {
-            return Exept(LastReportfiles, CurrentFiles);
+            return Except(LastReportfiles, CurrentFiles);
         }
 
-        public List<FileInfo> Intersect(List<FileInfo> l1, List<FileInfo> l2)
+        List<FileInfo> Intersect(List<FileInfo> l1, List<FileInfo> l2)
         {
-            List<string> ls1 = l1.Select(l => l.FullName).ToList();
-            List<string> ls2 = l2.Select(l => l.FullName).ToList();
-
-            List<string> lsex = ls1.Intersect(ls2).ToList();
-
             List<FileInfo> final = new List<FileInfo>();
 
-            foreach (string l in lsex)
-            //{
-            //    FileInfo y = l1.Where(x => x.FullName == l).First();
-
-            //    if(AreSameFiles(y, l2.Where(x => x.FullName == l).First()))
-            //final.Add(y);
-
-            //}
-            final.Add(l1.Where(x => x.FullName == l).First());
-
+            foreach (string l in LSEXlist(l1,l2))
+                final.Add(l1.Where(x => x.FullName == l).First());
 
             return final;
         }
-        public List<FileInfo> Exept(List<FileInfo> l1, List<FileInfo> l2)
+        List<FileInfo> Except(List<FileInfo> l1, List<FileInfo> l2)
         {
-            //THIS FUNTION NEEDS TO UNIT TEST
-            //The funtion have issues. Need to fix.
-            return l1.Except(l2).ToList();
+            List<FileInfo> final = new List<FileInfo>();
+
+            foreach (string l in LSEXlist(l1,l2))
+                final.Add(l1.Where(x => x.FullName == l).First());
+
+            return final;
+
         }
 
-        FileInfo FindFileByFullName(List<FileInfo> files,string fullname)
-        {
-            return files.Where(x => Equals(x.FullName, fullname)).First();
-        }
-
-        public List<FileInfo> ConvertSTATEtoINFO(List<FileState> state)
+        List<FileInfo> ConvertSTATEtoINFO(List<FileState> state)
         {
             List<FileInfo> newlist = new List<FileInfo>();
 
             foreach(FileState l in state)
-                newlist.Add(new FileInfo(l.FullName));
+            {
+                FileInfo newinfo = new FileInfo();
+
+                newinfo.FullName = l.FullName;
+                newinfo.Length = l.Length;
+                newinfo.LastWriteTime = l.LastWriteTime;
+                newinfo.Name = l.Name;
+
+                newlist.Add(newinfo);
+            }
 
             return newlist;
+        }
+
+        List<string> LSEXlist(List<FileInfo> l1, List<FileInfo> l2)
+        {
+            return SelectFullName(l1).Intersect(SelectFullName(l2)).ToList();
+        }
+        List<string> SelectFullName(List<FileInfo> list)
+        {
+            return list.Select(l => l.FullName).ToList();
+        }
+
+        FileInfo FindFileByFullName(List<FileInfo> files,string fullname)
+        {
+            return files.Where(x => Equals(x.FullName, fullname)).FirstOrDefault();
         }
         #endregion
     }
