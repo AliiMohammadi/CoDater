@@ -4,6 +4,7 @@ using CoDater.Logger;
 using System.Linq;
 using System.Web.Configuration;
 using static SaveSystem.SaveData;
+using System.IO;
 
 namespace CoDater
 {
@@ -13,12 +14,13 @@ namespace CoDater
 
         static void Main(string[] args)
         {
-            Report();
             Console.ReadKey();
         }
 
-        static void Report()
+        static void Report(string WorkDirectory)
         {
+            reporter.WorkDirectory = new DirectoryInfo(WorkDirectory);
+
             Print("Reporting...");
             List<ReportInfo> reports = reporter.Report();
 
@@ -42,6 +44,7 @@ namespace CoDater
                 }
             Print("");
             Print($"Version:{reports[reports.Count-1].Version}. Changes:{reports[reports.Count - 1].ChangesCount}");
+            Print($"New files:{reports[reports.Count-1].AddedFilesCount}. Deleted files:{reports[reports.Count - 1].DeletedFileCount}");
         }
 
         static void Print(object message, ConsoleColor color)

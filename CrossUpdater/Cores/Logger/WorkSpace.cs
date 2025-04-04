@@ -7,19 +7,29 @@ namespace CoDater.Logger
 {
     internal class WorkSpace
     {
-        public string GetPath
+        public DirectoryInfo WorkDirectory;
+        public string GetApplicationBasePath
         {
-            get { //return AppDomain.CurrentDomain.BaseDirectory;
-                return @"D:\Project\"; 
-                }
+                
+            get { return AppDomain.CurrentDomain.BaseDirectory;}
         }
 
-        public List<FileInfo> GetAllFilesAndSubFolderFiles
+        public WorkSpace()
         {
-            get
-            {
-                return DirSearch(GetPath);
-            }
+            WorkDirectory = new DirectoryInfo(GetApplicationBasePath);
+        }
+        public WorkSpace(string workdirectory)
+        {
+            WorkDirectory = new DirectoryInfo(workdirectory);
+        }
+        public WorkSpace(DirectoryInfo workdirectory)
+        {
+            WorkDirectory = workdirectory;
+        }
+
+        public List<FileInfo> GetAllFilesAndSubFolderFiles()
+        {
+            return DirSearch(WorkDirectory.FullName);
         }
 
         List<FileInfo> DirSearch(string sdir)

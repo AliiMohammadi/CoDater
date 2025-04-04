@@ -18,12 +18,17 @@ namespace CoDater.Logger
             workspace = new WorkSpace();
             SaveLoad = new JsonSaveData();
         }
+        public Reporter(DirectoryInfo workdirectory)
+        {
+            workspace = new WorkSpace(workdirectory);
+            SaveLoad = new JsonSaveData();
+        }
 
         public List<ReportInfo> Report()
         {
-            List<FileInfo> CurrentVersion = workspace.GetAllFilesAndSubFolderFiles;
+            List<FileInfo> CurrentVersion = workspace.GetAllFilesAndSubFolderFiles();
 
-            string datapath = workspace.GetPath + "\\" + FileName;
+            string datapath = workspace.WorkDirectory + "\\" + FileName;
 
             if (!File.Exists(datapath))
             {
@@ -99,6 +104,18 @@ namespace CoDater.Logger
             }
 
             return result;
+        }
+
+        public DirectoryInfo WorkDirectory
+        {
+            get
+            {
+                return workspace.WorkDirectory;
+            }
+            set
+            {
+                workspace.WorkDirectory = value;
+            }
         }
 
         #region Local Funtions
