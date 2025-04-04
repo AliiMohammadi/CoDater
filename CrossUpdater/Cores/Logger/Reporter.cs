@@ -133,7 +133,7 @@ namespace CoDater.Logger
         {
             List<FileInfo> final = new List<FileInfo>();
 
-            foreach (string l in LSEXlist(l1,l2))
+            foreach (string l in SelectFullName(l1).Intersect(SelectFullName(l2)).ToList())
                 final.Add(l1.Where(x => x.FullName == l).First());
 
             return final;
@@ -142,7 +142,7 @@ namespace CoDater.Logger
         {
             List<FileInfo> final = new List<FileInfo>();
 
-            foreach (string l in LSEXlist(l1,l2))
+            foreach (string l in SelectFullName(l1).Except(SelectFullName(l2)).ToList())
                 final.Add(l1.Where(x => x.FullName == l).First());
 
             return final;
@@ -168,10 +168,6 @@ namespace CoDater.Logger
             return newlist;
         }
 
-        List<string> LSEXlist(List<FileInfo> l1, List<FileInfo> l2)
-        {
-            return SelectFullName(l1).Intersect(SelectFullName(l2)).ToList();
-        }
         List<string> SelectFullName(List<FileInfo> list)
         {
             return list.Select(l => l.FullName).ToList();
