@@ -1,9 +1,8 @@
 ﻿using System;
-using System.IO;
 
 namespace CoDater.Logger
 {
-    internal class FileState : FileInfo
+    internal class FileState : Workspace.FileInfo
     {
         public enum FileStatus
         {
@@ -16,7 +15,7 @@ namespace CoDater.Logger
         {
             Status = status;    
         }
-        public FileState(FileInfo file, FileStatus status)
+        public FileState(Workspace.FileInfo file, FileStatus status)
         {
             Name = file.Name;
             FullName = file.FullName;

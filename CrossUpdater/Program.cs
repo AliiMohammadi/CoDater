@@ -1,9 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using CoDater.Logger;
-using System.Linq;
-using System.Web.Configuration;
-using static SaveSystem.SaveData;
 using System.IO;
 
 namespace CoDater
@@ -14,8 +11,7 @@ namespace CoDater
 
         static void Main(string[] args)
         {
-            DownloadManager.Donwloader.DownloadFile("https://raw.githubusercontent.com/AliiMohammadi/CoDater/refs/heads/master/CrossUpdater/Program.cs",@"D:/Program.cs");
-            DownloadManager.Donwloader.DownloadFile("https://raw.githubusercontent.com/AliiMohammadi/CoDater/refs/heads/master/CrossUpdater/bin/Debug/CrossUpdater.exe", @"CrossUpdater.exe");
+            Report(@"D:\Project");
             Console.ReadKey();
         }
 

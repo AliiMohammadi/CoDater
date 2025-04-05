@@ -1,8 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.IO;
 using System.Linq;
 using SaveAndRetrieve;
+using CoDater.Workspace;
 
 namespace CoDater.Logger
 {
@@ -18,7 +18,7 @@ namespace CoDater.Logger
             workspace = new WorkSpace();
             SaveLoad = new JsonSaveData();
         }
-        public Reporter(DirectoryInfo workdirectory)
+        public Reporter(System.IO.DirectoryInfo workdirectory)
         {
             workspace = new WorkSpace(workdirectory);
             SaveLoad = new JsonSaveData();
@@ -30,7 +30,7 @@ namespace CoDater.Logger
 
             string datapath = workspace.WorkDirectory + "\\" + FileName;
 
-            if (!File.Exists(datapath))
+            if (!System.IO.File.Exists(datapath))
             {
                 List<ReportInfo> emptyreport = new List<ReportInfo>();
                 //Report file doesnt exist then creat and write defualt data.
@@ -57,7 +57,7 @@ namespace CoDater.Logger
 
             return loadedReport;
         }
-        public ReportInfo GetChanges(ReportInfo LastReport , List<FileInfo> CurrentFiles)
+        public ReportInfo GetChanges(ReportInfo LastReport , List<Workspace.FileInfo> CurrentFiles)
         {
             ReportInfo result = new ReportInfo(new List<FileInfo>(), DateTime.Now, ++LastReport.Version);
 
@@ -106,7 +106,7 @@ namespace CoDater.Logger
             return result;
         }
 
-        public DirectoryInfo WorkDirectory
+        public System.IO.DirectoryInfo WorkDirectory
         {
             get
             {

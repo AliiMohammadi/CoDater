@@ -44,13 +44,16 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Cores\CloudReader.cs" />
     <Compile Include="Cores\DownloadManager\Donwloader.cs" />
     <Compile Include="Cores\Logger\ChangeInfo.cs" />
-    <Compile Include="Cores\Logger\FileInfo.cs" />
+    <Compile Include="Cores\ReLogger\InterpretResult.cs" />
+    <Compile Include="Cores\ReLogger\Relog.cs" />
+    <Compile Include="Cores\WorkSpace\FileInfo.cs" />
     <Compile Include="Cores\Logger\FileState.cs" />
     <Compile Include="Cores\Logger\Reporter.cs" />
     <Compile Include="Cores\Logger\ReportInfo.cs" />
-    <Compile Include="Cores\Logger\WorkSpace.cs" />
+    <Compile Include="Cores\WorkSpace\WorkSpace.cs" />
     <Compile Include="Cores\SaveAndRetrieve Core\JsonSaveData.cs" />
     <Compile Include="Cores\SaveAndRetrieve Core\JSonSingleObject\SaveSystem.cs" />
     <Compile Include="Cores\SaveAndRetrieve Core\JSonSingleObject\SimpleJson.cs" />

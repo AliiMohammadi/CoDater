@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -17,7 +16,7 @@ namespace CoDater.Logger
         {
             Files = new List<FileState>();
         }
-        public ReportInfo(List<FileInfo> files,DateTime date,int version)
+        public ReportInfo(List<Workspace.FileInfo> files,DateTime date,int version)
         {
             Files = new List<FileState>();
             Date = date;
@@ -25,7 +24,7 @@ namespace CoDater.Logger
             ConvertFileInfoToFileState(files);
         }
 
-        void ConvertFileInfoToFileState(List<FileInfo> files)
+        void ConvertFileInfoToFileState(List<Workspace.FileInfo> files)
         {
             foreach (var item in files)
                 Files.Add(new FileState(item, FileState.FileStatus.UnChanged));

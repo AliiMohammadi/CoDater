@@ -3,7 +3,7 @@ using System.Reflection;
 using System.IO;
 using System.Collections.Generic;
 
-namespace CoDater.Logger
+namespace CoDater.Workspace
 {
     internal class WorkSpace
     {

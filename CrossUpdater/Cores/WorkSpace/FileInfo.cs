@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace CoDater.Logger
+namespace CoDater.Workspace
 {
     internal class FileInfo
     {
