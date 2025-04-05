@@ -14,6 +14,8 @@ namespace CoDater
 
         static void Main(string[] args)
         {
+            DownloadManager.Donwloader.DownloadFile("https://raw.githubusercontent.com/AliiMohammadi/CoDater/refs/heads/master/CrossUpdater/Program.cs",@"D:/Program.cs");
+            DownloadManager.Donwloader.DownloadFile("https://raw.githubusercontent.com/AliiMohammadi/CoDater/refs/heads/master/CrossUpdater/bin/Debug/CrossUpdater.exe", @"CrossUpdater.exe");
             Console.ReadKey();
         }
 

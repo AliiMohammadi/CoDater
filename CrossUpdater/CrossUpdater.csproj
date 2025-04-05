@@ -44,6 +44,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Cores\DownloadManager\Donwloader.cs" />
     <Compile Include="Cores\Logger\ChangeInfo.cs" />
     <Compile Include="Cores\Logger\FileInfo.cs" />
     <Compile Include="Cores\Logger\FileState.cs" />
