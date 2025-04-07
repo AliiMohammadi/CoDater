@@ -11,7 +11,7 @@ namespace CoDater
 
         static void Main(string[] args)
         {
-            Report(@"D:\Project");
+            //Report(@"D:\Project");
             Console.ReadKey();
         }
 
