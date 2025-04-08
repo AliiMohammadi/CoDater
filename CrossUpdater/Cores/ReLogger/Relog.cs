@@ -47,10 +47,9 @@ namespace CoDater.ReLogger
             if (!System.IO.File.Exists(datapath))
                 throw new Exception("The report data file not found.");
 
-            string OnlineDatapath = RepositoryURL + "\\" + FileName;
+            //string OnlineDatapath = RepositoryURL.Address.Value + "/" + FileName.Replace("\\", "/");
+            string OnlineDatapath = ConvertFileNameToGitHubRawLink(RepositoryURL, new FileInfo(datapath));
             string OnlineReportdata = cloudReader.Read(OnlineDatapath);
-
-            InterpretResult result = new InterpretResult();
 
             List<ReportInfo> LocalReports = SaveLoad.LoadData<List<ReportInfo>>(datapath);
             List<ReportInfo> OnlineReports = serializer.Deserialize<List<ReportInfo>>(OnlineReportdata);
@@ -65,10 +64,10 @@ namespace CoDater.ReLogger
 
             ApplyChangesToVersion(Changes,workspace);
 
-            return result;
+            return Changes;
         }
 
-        InterpretResult CompareVersions(List<ReportInfo> v1, List<ReportInfo> v2)
+        private InterpretResult CompareVersions(List<ReportInfo> v1, List<ReportInfo> v2)
         {
             InterpretResult result = new InterpretResult();
 
@@ -98,8 +97,7 @@ namespace CoDater.ReLogger
 
             return result;
         }
-
-        void ApplyChangesToVersion(InterpretResult changes, WorkSpace workspace)
+        private void ApplyChangesToVersion(InterpretResult changes, WorkSpace workspace)
         {
             List<FileInfo> FilesToDelete = new List<FileInfo>();
             List<FileInfo> FilesToDonwload = new List<FileInfo>();
@@ -112,7 +110,7 @@ namespace CoDater.ReLogger
 
             foreach (var item in FilesToDelete)
                 DeleteIfExist(item);
-
+            //A problem, Wha t about the times, when some file deleted and have problem to downloading file.
             foreach (var item in FilesToDonwload)
                 DownloadFile(new Url(ConvertFileNameToGitHubRawLink(RepositoryURL,item)), item);
         }
@@ -122,25 +120,33 @@ namespace CoDater.ReLogger
             if (!list.Exists(x => x.FullName == file.FullName))
                 list.Add(file);
         }
-
-        void DeleteIfExist(FileInfo file)
+        public void DeleteIfExist(FileInfo file)
         {
             if (System.IO.File.Exists(file.FullName))
                 System.IO.File.Delete(file.FullName);
         }
         void DownloadFile(Url url , FileInfo file )
         {
-            DownloadManager.Donwloader.DownloadFile(url, file.FullName);
+            try
+            {
+                string directo = System.IO.Path.GetDirectoryName(file.FullName);
+
+                if (!System.IO.Directory.Exists(directo))
+                    System.IO.Directory.CreateDirectory(directo);
+
+                DownloadManager.Donwloader.DownloadFile(url.Value, file.FullName);
+            }
+            catch (Exception e)
+            {
+                throw e;
+            }
         }
-
-        public string ConvertFileNameToGitHubRawLink(RepositoryURL link,FileInfo f)
+        string ConvertFileNameToGitHubRawLink(RepositoryURL repolink,FileInfo file)
         {
-            //NEED TO TEST
-            string x = f.FullName;
+            string x = file.FullName;
 
-            x.Remove(x.IndexOf(link.Name) + link.Name.Length);
-            x.Replace("\\","/");
-            x = @"https://raw.githubusercontent.com/" + link.Username+"/"+link.Name+ @"/refs/heads/master/" + x;
+            x = x.Remove(0, x.IndexOf(repolink.Name) + repolink.Name.Length).Replace("\\", "/");
+            x = @"https://raw.githubusercontent.com/" + repolink.Username+"/"+repolink.Name+ @"/refs/heads/master" + x;
 
             return x;
         }
@@ -151,5 +157,7 @@ namespace CoDater.ReLogger
             string final = url.Address.Value.Replace(@"https://github.com/", @"https://raw.githubusercontent.com/").Replace("/blob/master/", "/refs/heads/master/");
             return new Url(final);
         }
+
+        //Report: Bug accure when you make a report and after you change the project folder location somewhere else.
     }
 }

@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using CoDater.Logger;
-using System.IO;
+using CoDater.Workspace;
 
 namespace CoDater
 {
@@ -11,13 +11,15 @@ namespace CoDater
 
         static void Main(string[] args)
         {
-            //Report(@"D:\Project");
+            
+            //Report(@"D:\CodaterTestRepoProject");
+            Relog();
             Console.ReadKey();
         }
 
         static void Report(string WorkDirectory)
         {
-            reporter.WorkDirectory = new DirectoryInfo(WorkDirectory);
+            reporter.WorkDirectory = new System.IO.DirectoryInfo(WorkDirectory);
 
             Print("Reporting...");
             List<ReportInfo> reports = reporter.Report();
@@ -40,9 +42,29 @@ namespace CoDater
                     default:
                         break;
                 }
+
             Print("");
             Print($"Version:{reports[reports.Count-1].Version}. Changes:{reports[reports.Count - 1].ChangesCount}");
             Print($"New files:{reports[reports.Count-1].AddedFilesCount}. Deleted files:{reports[reports.Count - 1].DeletedFileCount}");
+        }
+        static void Relog()
+        {
+            ReLogger.Relog loger = new ReLogger.Relog(new System.IO.DirectoryInfo(@"D:\CodaterTestRepoProject"), new System.Security.Policy.Url(@"https://github.com/AliiMohammadi/CodaterTestRepoProject"));
+            ReLogger.InterpretResult res = loger.Interpret();
+
+            foreach (var item in res.DeletedFiles)
+            {
+                Print("-" + item.Name, ConsoleColor.Red);
+            }
+            foreach (var item in res.ModedFiles)
+            {
+                Print("*" + item.Name, ConsoleColor.Yellow);
+            }
+            foreach (var item in res.AddedFiles)
+            {
+                Print("+" + item.Name, ConsoleColor.Green);
+            }
+
         }
 
         static void Print(object message, ConsoleColor color)
