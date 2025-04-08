@@ -6,8 +6,15 @@ using CoDater.Workspace;
 
 namespace CoDater.Logger
 {
+    /// <summary>
+    /// وظیفه گزارش گیری از پروژه فعلی را دارد
+    /// 
+    /// </summary>
     internal class Reporter
     {
+        /// <summary>
+        /// اسم فایل گزارش 
+        /// </summary>
         public string FileName = "CoDater.dat";
 
         WorkSpace workspace;
@@ -24,6 +31,11 @@ namespace CoDater.Logger
             SaveLoad = new JsonSaveData();
         }
 
+        /// <summary>
+        /// گزارش گیری از نسخه ای که درال اظر هست
+        /// </summary>
+        /// <returns></returns>
+        /// <exception cref="Exception"></exception>
         public List<ReportInfo> Report()
         {
             List<FileInfo> CurrentVersion = workspace.GetAllFilesAndSubFolderFiles();
@@ -57,6 +69,12 @@ namespace CoDater.Logger
 
             return loadedReport;
         }
+        /// <summary>
+        /// تغییرات دو را برمیگردادند 
+        /// </summary>
+        /// <param name="LastReport"></param>
+        /// <param name="CurrentFiles"></param>
+        /// <returns></returns>
         public ReportInfo GetChanges(ReportInfo LastReport , List<Workspace.FileInfo> CurrentFiles)
         {
             ReportInfo result = new ReportInfo(new List<FileInfo>(), DateTime.Now, ++LastReport.Version);

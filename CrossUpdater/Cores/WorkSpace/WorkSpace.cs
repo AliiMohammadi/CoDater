@@ -5,9 +5,16 @@ using System.Collections.Generic;
 
 namespace CoDater.Workspace
 {
+    /// <summary>
+    /// کلاس برای مدیریت کردن فولدر محیط کاری 
+    /// اطلاعاتی درمورد فایل ها و ...
+    /// </summary>
     internal class WorkSpace
     {
         public DirectoryInfo WorkDirectory;
+        /// <summary>
+        /// ادرس برنامه ای که درال اجراس
+        /// </summary>
         public string GetApplicationBasePath
         {
                 
@@ -27,6 +34,9 @@ namespace CoDater.Workspace
             WorkDirectory = workdirectory;
         }
 
+        /// <summary>
+        /// لیست تمامی فایل ها را برمیگرداند        /// </summary>
+        /// <returns></returns>
         public List<FileInfo> GetAllFilesAndSubFolderFiles()
         {
             return DirSearch(WorkDirectory.FullName);
