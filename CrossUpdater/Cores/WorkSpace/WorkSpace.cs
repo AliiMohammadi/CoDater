@@ -43,7 +43,7 @@ namespace CoDater.Workspace
         }
         public string WorkName(FileInfo file)
         {
-            return file.FullName.Replace(WorkDirectory.FullName,"\\");
+            return file.WorkName.Replace(WorkDirectory.FullName,"\\");
         }
 
         List<FileInfo> DirSearch(string sdir)

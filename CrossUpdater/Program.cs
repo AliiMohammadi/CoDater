@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using CoDater.Logger;
 using CoDater.Workspace;
+using CommandExecutor;
 
 namespace CoDater
 {
@@ -11,7 +12,12 @@ namespace CoDater
 
         static void Main(string[] args)
         {
-            
+            Executor ex = new Executor();
+
+            ex.AddCommand("Report", SayHello);
+            ex.AddCommand("Relog", SayGoodBye);
+            //For Exicuting we just call Exicute and in () we write name of the command 
+            ex.Execute(Console.ReadLine());
             //Report(@"D:\CodaterTestRepoProject");
             Relog();
             Console.ReadKey();

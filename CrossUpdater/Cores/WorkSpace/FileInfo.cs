@@ -10,7 +10,7 @@ namespace CoDater.Workspace
         //MyFile.txt
         public string Name { get; set; }
         //D://Myproject/DocumentFolder/MyFile.txt
-        public string FullName { get; set; }
+        public string WorkName { get; set; }
         public DateTime LastWriteTime { get; set; }
         public long Length { get; set; }
 
@@ -22,7 +22,15 @@ namespace CoDater.Workspace
         {
             System.IO.FileInfo info = new System.IO.FileInfo(file);
             Name = info.Name;
-            FullName = info.FullName;
+            WorkName = info.FullName;
+            LastWriteTime = info.LastWriteTime;
+            Length = info.Length;
+        }
+        public FileInfo(string file , string workname)
+        {
+            System.IO.FileInfo info = new System.IO.FileInfo(file);
+            Name = info.Name;
+            WorkName = workname;
             LastWriteTime = info.LastWriteTime;
             Length = info.Length;
         }

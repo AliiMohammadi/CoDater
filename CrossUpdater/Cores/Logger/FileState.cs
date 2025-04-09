@@ -18,7 +18,15 @@ namespace CoDater.Logger
         public FileState(Workspace.FileInfo file, FileStatus status)
         {
             Name = file.Name;
-            FullName = file.FullName;
+            WorkName = file.WorkName;
+            LastWriteTime = file.LastWriteTime;
+            Length = file.Length;
+            Status = status;
+        }
+        public FileState(Workspace.FileInfo file, FileStatus status,string workspace)
+        {
+            Name = file.Name;
+            WorkName = file.WorkName;
             LastWriteTime = file.LastWriteTime;
             Length = file.Length;
             Status = status;

@@ -45,6 +45,8 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Cores\CloudReader.cs" />
+    <Compile Include="Cores\CommandExecuter\Command.cs" />
+    <Compile Include="Cores\CommandExecuter\Executor.cs" />
     <Compile Include="Cores\DownloadManager\Donwloader.cs" />
     <Compile Include="Cores\Logger\ChangeInfo.cs" />
     <Compile Include="Cores\ReLogger\InterpretResult.cs" />

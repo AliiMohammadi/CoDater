@@ -89,35 +89,38 @@ namespace CoDater.Logger
 
             //Determining the moded files.
             //A funtion that Gives two FileInfo list. 
-            //الان این فایل هایی رو برمیگردون که اصلا تغییر نکردن
 
             List<FileInfo> CurrentRemainedFiles = GetCurrentRemainedFiles(CurrentFiles, LastReportfilesCONVERTED);
 
             foreach (FileInfo lastfile in LastReportfiles)
             {
-                if (!CurrentRemainedFiles.Exists(x => x.FullName == lastfile.FullName))
+                if (!CurrentRemainedFiles.Exists(x => x.WorkName == lastfile.WorkName))
                     continue;
 
-                FileInfo CurretnFoundedFile = FindFileByFullName(CurrentRemainedFiles, lastfile.FullName);
-
+                FileInfo CurretnFoundedFile = FindFileByFullName(CurrentRemainedFiles, lastfile.WorkName);
+                string workname = CurretnFoundedFile.WorkName.Replace(workspace.WorkDirectory.FullName,"\\");
                 if (!AreSameFiles(lastfile, CurretnFoundedFile))
                 {
-                    result.Files.Add(new FileState(CurretnFoundedFile, FileState.FileStatus.Changed));
+                    result.Files.Add(new FileState(CurretnFoundedFile, FileState.FileStatus.Changed, workname));
                     result.ModedFileCount++;
                 }
                 else
-                    result.Files.Add(new FileState(CurretnFoundedFile, FileState.FileStatus.UnChanged));
+                    result.Files.Add(new FileState(CurretnFoundedFile, FileState.FileStatus.UnChanged, workname));
             }
 
             //Determin the deleted files and Added files
             foreach (FileInfo item in GetAddedFiles(LastReportfilesCONVERTED, CurrentFiles))
             {
-                result.Files.Add(new FileState(item, FileState.FileStatus.Added));
+                string workname = item.WorkName.Replace(workspace.WorkDirectory.FullName, "\\");
+
+                result.Files.Add(new FileState(item, FileState.FileStatus.Added, workname));
                 result.AddedFilesCount++;
             }
             foreach (FileInfo item in GetDeletedFiles(LastReportfilesCONVERTED, CurrentFiles))
             {
-                result.Files.Add(new FileState(item, FileState.FileStatus.Removed));
+                string workname = item.WorkName.Replace(workspace.WorkDirectory.FullName, "\\");
+
+                result.Files.Add(new FileState(item, FileState.FileStatus.Removed, workname));
                 result.DeletedFileCount++;
             }
 
@@ -169,7 +172,7 @@ namespace CoDater.Logger
             List<FileInfo> final = new List<FileInfo>();
 
             foreach (string l in SelectFullName(l1).Intersect(SelectFullName(l2)).ToList())
-                final.Add(l1.Where(x => x.FullName == l).First());
+                final.Add(l1.Where(x => x.WorkName == l).First());
 
             return final;
         }
@@ -178,7 +181,7 @@ namespace CoDater.Logger
             List<FileInfo> final = new List<FileInfo>();
 
             foreach (string l in SelectFullName(l1).Except(SelectFullName(l2)).ToList())
-                final.Add(l1.Where(x => x.FullName == l).First());
+                final.Add(l1.Where(x => x.WorkName == l).First());
 
             return final;
 
@@ -192,7 +195,7 @@ namespace CoDater.Logger
             {
                 FileInfo newinfo = new FileInfo();
 
-                newinfo.FullName = l.FullName;
+                newinfo.WorkName = l.WorkName;
                 newinfo.Length = l.Length;
                 newinfo.LastWriteTime = l.LastWriteTime;
                 newinfo.Name = l.Name;
@@ -205,12 +208,12 @@ namespace CoDater.Logger
 
         List<string> SelectFullName(List<FileInfo> list)
         {
-            return list.Select(l => l.FullName).ToList();
+            return list.Select(l => l.WorkName).ToList();
         }
 
         FileInfo FindFileByFullName(List<FileInfo> files,string fullname)
         {
-            return files.Where(x => Equals(x.FullName, fullname)).FirstOrDefault();
+            return files.Where(x => Equals(x.WorkName, fullname)).FirstOrDefault();
         }
         #endregion
     }

@@ -72,6 +72,7 @@ namespace CoDater.ReLogger
             InterpretResult result = new InterpretResult();
 
             ReportInfo LastReport = v1.Last();
+
             List<ReportInfo> NewVersions = new List<ReportInfo>(v2);
 
             int VersionDistance = v2.Last().Version - LastReport.Version;
@@ -118,24 +119,28 @@ namespace CoDater.ReLogger
         void AddIfNotExist(List<FileInfo> list ,FileState file )
         {
 
-            if (!list.Exists(x => x.FullName == workspace.WorkName(file)))
+            if (!list.Exists(x => x.WorkName == workspace.WorkName(file)))
                 list.Add(file);
         }
-        public void DeleteIfExist(FileInfo file)
+        void DeleteIfExist(FileInfo file)
         {
-            if (System.IO.File.Exists(file.FullName))
-                System.IO.File.Delete(file.FullName);
+            string path = workspace.WorkDirectory.FullName + file.WorkName;
+
+            if (System.IO.File.Exists(path))
+                System.IO.File.Delete(path);
         }
         void DownloadFile(Url url , FileInfo file )
         {
             try
             {
-                string directo = System.IO.Path.GetDirectoryName(file.FullName);
+                string path = workspace.WorkDirectory.FullName + file.WorkName;
+
+                string directo = System.IO.Path.GetDirectoryName(path);
 
                 if (!System.IO.Directory.Exists(directo))
                     System.IO.Directory.CreateDirectory(directo);
 
-                DownloadManager.Donwloader.DownloadFile(url.Value, file.FullName);
+                DownloadManager.Donwloader.DownloadFile(url.Value, path);
             }
             catch (Exception e)
             {
@@ -144,7 +149,7 @@ namespace CoDater.ReLogger
         }
         string ConvertFileNameToGitHubRawLink(RepositoryURL repolink,FileInfo file)
         {
-            string x = file.FullName;
+            string x = file.WorkName;
 
             x = x.Remove(0, x.IndexOf(repolink.Name) + repolink.Name.Length).Replace("\\", "/");
             x = @"https://raw.githubusercontent.com/" + repolink.Username+"/"+repolink.Name+ @"/refs/heads/master" + x;
