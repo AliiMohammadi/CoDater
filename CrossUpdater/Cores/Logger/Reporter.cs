@@ -46,7 +46,7 @@ namespace CoDater.Logger
             {
                 List<ReportInfo> emptyreport = new List<ReportInfo>();
                 //Report file doesnt exist then creat and write defualt data.
-                emptyreport.Add(new ReportInfo(CurrentVersion, DateTime.Now, 1));
+                emptyreport.Add(new ReportInfo(CurrentVersion, DateTime.Now, 1 , workspace.WorkDirectory.FullName));
                 SaveLoad.SaveData(emptyreport, datapath);
                 return emptyreport;
             }
@@ -77,7 +77,7 @@ namespace CoDater.Logger
         /// <returns></returns>
         public ReportInfo GetChanges(ReportInfo LastReport , List<Workspace.FileInfo> CurrentFiles)
         {
-            ReportInfo result = new ReportInfo(new List<FileInfo>(), DateTime.Now, ++LastReport.Version);
+            ReportInfo result = new ReportInfo(new List<FileInfo>(), DateTime.Now, ++LastReport.Version, workspace.WorkDirectory.FullName);
 
             //Version check steps:
             //1: Deleted files check.

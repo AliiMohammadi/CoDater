@@ -11,16 +11,18 @@ namespace CoDater.Logger
         public DateTime Date { get; set; }
         public int Version { get; set; }
         public List<FileState> Files { get; set; }
+        public string WorkSpaceFullName { get; set; }
 
         public ReportInfo()
         {
             Files = new List<FileState>();
         }
-        public ReportInfo(List<Workspace.FileInfo> files,DateTime date,int version)
+        public ReportInfo(List<Workspace.FileInfo> files,DateTime date,int version , string workspaceadd)
         {
             Files = new List<FileState>();
             Date = date;
             Version = version;
+            WorkSpaceFullName = workspaceadd;
             ConvertFileInfoToFileState(files);
         }
 

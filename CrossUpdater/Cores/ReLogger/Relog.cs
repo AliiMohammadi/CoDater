@@ -117,7 +117,8 @@ namespace CoDater.ReLogger
 
         void AddIfNotExist(List<FileInfo> list ,FileState file )
         {
-            if (!list.Exists(x => x.FullName == file.FullName))
+
+            if (!list.Exists(x => x.FullName == workspace.WorkName(file)))
                 list.Add(file);
         }
         public void DeleteIfExist(FileInfo file)

@@ -41,6 +41,10 @@ namespace CoDater.Workspace
         {
             return DirSearch(WorkDirectory.FullName);
         }
+        public string WorkName(FileInfo file)
+        {
+            return file.FullName.Replace(WorkDirectory.FullName,"\\");
+        }
 
         List<FileInfo> DirSearch(string sdir)
         {
