@@ -45,11 +45,14 @@ namespace CoDater.ReLogger
             string datapath = workspace.WorkDirectory + "\\" + FileName;
 
             if (!System.IO.File.Exists(datapath))
-                throw new Exception("The report data file not found.");
+                throw new Exception("The patch report file not found.");
 
             //string OnlineDatapath = RepositoryURL.Address.Value + "/" + FileName.Replace("\\", "/");
             string OnlineDatapath = ConvertFileNameToGitHubRawLink(RepositoryURL, new FileInfo(datapath));
             string OnlineReportdata = cloudReader.Read(OnlineDatapath);
+
+            if(OnlineReportdata == null) 
+                throw new Exception("Unable to get patch report file online.");
 
             List<ReportInfo> LocalReports = SaveLoad.LoadData<List<ReportInfo>>(datapath);
             List<ReportInfo> OnlineReports = serializer.Deserialize<List<ReportInfo>>(OnlineReportdata);
