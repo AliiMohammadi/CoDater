@@ -10,6 +10,7 @@ using System.Security.Policy;
 using CrossUpdater.Cores.ReLogger;
 using System.Data;
 
+
 namespace CoDater.ReLogger
 {
     internal class Relog
@@ -45,14 +46,14 @@ namespace CoDater.ReLogger
             string datapath = workspace.WorkDirectory + "\\" + FileName;
 
             if (!System.IO.File.Exists(datapath))
-                throw new Exception("The patch report file not found.");
+                throw new Exception($"The patch report file not found ({datapath}).");
 
             //string OnlineDatapath = RepositoryURL.Address.Value + "/" + FileName.Replace("\\", "/");
             string OnlineDatapath = ConvertFileNameToGitHubRawLink(RepositoryURL, new FileInfo(datapath));
             string OnlineReportdata = cloudReader.Read(OnlineDatapath);
 
             if(OnlineReportdata == null) 
-                throw new Exception("Unable to get patch report file online.");
+                throw new Exception($"Unable to get patch report file online ({OnlineReportdata}).");
 
             List<ReportInfo> LocalReports = SaveLoad.LoadData<List<ReportInfo>>(datapath);
             List<ReportInfo> OnlineReports = serializer.Deserialize<List<ReportInfo>>(OnlineReportdata);
@@ -65,7 +66,7 @@ namespace CoDater.ReLogger
 
             InterpretResult Changes = CompareVersions(LocalReports, OnlineReports);
 
-            ApplyChangesToVersion(Changes,workspace);
+            ApplyChangesToVersion(Changes, workspace);
 
             return Changes;
         }
@@ -82,18 +83,19 @@ namespace CoDater.ReLogger
 
             NewVersions.RemoveRange(0, v2.Count - VersionDistance - 1);
 
-            foreach (var item in NewVersions)
-                foreach (var item2 in item.Files)
-                    switch (item2.Status)
+            foreach (var NewFiles in NewVersions)
+                foreach (var NewVersionFile in NewFiles.Files)
+                    switch (NewVersionFile.Status)
                     {
                         case FileState.FileStatus.Changed:
-                            AddIfNotExist(result.ModedFiles, item2);
+                            AddIfNotExist(result.ModedFiles, NewVersionFile);
                             break;
                         case FileState.FileStatus.Removed:
-                            AddIfNotExist(result.DeletedFiles, item2);
+                            NewVersionFile.WorkName = ConvertToCurrentWorkDirectory(NewVersionFile);
+                            AddIfNotExist(result.DeletedFiles, NewVersionFile);
                             break;
                         case FileState.FileStatus.Added:
-                            AddIfNotExist(result.AddedFiles,item2);
+                            AddIfNotExist(result.AddedFiles,NewVersionFile);
                             break;
                         default:
                             break;
@@ -121,13 +123,13 @@ namespace CoDater.ReLogger
 
         void AddIfNotExist(List<FileInfo> list ,FileState file )
         {
-
-            if (!list.Exists(x => x.WorkName == workspace.WorkName(file)))
+            if (!list.Exists(x => x.WorkName == file.WorkName))
                 list.Add(file);
         }
         void DeleteIfExist(FileInfo file)
         {
-            string path = workspace.WorkDirectory.FullName + file.WorkName;
+            string fileworkpath = file.WorkName.Remove(0, file.WorkName.IndexOf(workspace.WorkDirectory.Name) + workspace.WorkDirectory.Name.Length);
+            string path = workspace.WorkDirectory.FullName + fileworkpath;
 
             if (System.IO.File.Exists(path))
                 System.IO.File.Delete(path);
@@ -136,7 +138,8 @@ namespace CoDater.ReLogger
         {
             try
             {
-                string path = workspace.WorkDirectory.FullName + file.WorkName;
+                string fileworkpath = file.WorkName.Remove(0, file.WorkName.IndexOf(workspace.WorkDirectory.Name) + workspace.WorkDirectory.Name.Length);
+                string path = workspace.WorkDirectory.FullName + fileworkpath;
 
                 string directo = System.IO.Path.GetDirectoryName(path);
 
@@ -147,14 +150,25 @@ namespace CoDater.ReLogger
             }
             catch (Exception e)
             {
-                throw e;
+                throw new Exception($"Failed to downlaod file \"{file.WorkName}\": {e.Message}");
             }
         }
+
+        string ConvertToCurrentWorkDirectory(FileInfo file)
+        {
+            string fileworkpath = file.WorkName.Remove(0, file.WorkName.IndexOf(workspace.WorkDirectory.Name) + workspace.WorkDirectory.Name.Length);
+            return workspace.WorkDirectory.FullName + fileworkpath;
+        }
+
         string ConvertFileNameToGitHubRawLink(RepositoryURL repolink,FileInfo file)
         {
             string x = file.WorkName;
+            int index = x.IndexOf(repolink.Name);
 
-            x = x.Remove(0, x.IndexOf(repolink.Name) + repolink.Name.Length).Replace("\\", "/");
+            if (index == -1 || !x.Split('\\').Contains(repolink.Name))
+                throw new Exception($"Can not find the source folder directory. the source project folder should be renamed to \"{repolink.Name}\".");
+
+            x = x.Remove(0, index + repolink.Name.Length).Replace("\\", "/");
             x = @"https://raw.githubusercontent.com/" + repolink.Username+"/"+repolink.Name+ @"/refs/heads/master" + x;
 
             return x;
@@ -166,7 +180,5 @@ namespace CoDater.ReLogger
             string final = url.Address.Value.Replace(@"https://github.com/", @"https://raw.githubusercontent.com/").Replace("/blob/master/", "/refs/heads/master/");
             return new Url(final);
         }
-
-        //Report: Bug accure when you make a report and after you change the project folder location somewhere else.
     }
 }

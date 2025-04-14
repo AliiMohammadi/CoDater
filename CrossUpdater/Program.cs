@@ -19,6 +19,8 @@ namespace CoDater
             Relog();
             //ex.Execute(args[0]);
 
+            //oxidan
+
             Console.ReadKey();
         }
 
@@ -26,25 +28,25 @@ namespace CoDater
         {
             try
             {
+                Print("Reporting...");
                 reporter.WorkDirectory = new System.IO.DirectoryInfo(WorkDirectory);
 
                 List<ReportInfo> reports = reporter.Report();
-                Print("Reporting...");
 
                 foreach (var item in reports[reports.Count - 1].Files)
                     switch (item.Status)
                     {
                         case FileState.FileStatus.UnChanged:
-                            Print($".: {item.Name}");
+                            Print($".: {item.WorkName}");
                             break;
                         case FileState.FileStatus.Changed:
-                            Print($"*: {item.Name}", ConsoleColor.Yellow);
+                            Print($"*: {item.WorkName}", ConsoleColor.Yellow);
                             break;
                         case FileState.FileStatus.Added:
-                            Print($"+: {item.Name}", ConsoleColor.Green);
+                            Print($"+: {item.WorkName}", ConsoleColor.Green);
                             break;
                         case FileState.FileStatus.Removed:
-                            Print($"-: {item.Name}", ConsoleColor.Red);
+                            Print($"-: {item.WorkName}", ConsoleColor.Red);
                             break;
                         default:
                             break;
@@ -63,32 +65,29 @@ namespace CoDater
         }
         static void Relog()
         {
-
             try
             {
-                ReLogger.Relog loger = new ReLogger.Relog(new System.IO.DirectoryInfo(@"C:\Users\msi PC\Desktop\CodaterTestRepoProjectOLD"), new System.Security.Policy.Url(@"https://github.com/AliiMohammadi/CodaterTestRepoProject"));
-                ReLogger.InterpretResult res = loger.Interpret();
                 Print("Reloging ...");
+                ReLogger.Relog loger = new ReLogger.Relog(new System.IO.DirectoryInfo(@"C:\Users\msi PC\Desktop\CodaterTestRepoProject"), new System.Security.Policy.Url(@"https://github.com/AliiMohammadi/CodaterTestRepoProject"));
+                ReLogger.InterpretResult res = loger.Interpret();
 
                 foreach (var item in res.DeletedFiles)
                 {
-                    Print("-" + item.Name, ConsoleColor.Red);
+                    Print("-" + item.WorkName, ConsoleColor.Red);
                 }
                 foreach (var item in res.ModedFiles)
                 {
-                    Print("*" + item.Name, ConsoleColor.Yellow);
+                    Print("*" + item.WorkName, ConsoleColor.Yellow);
                 }
                 foreach (var item in res.AddedFiles)
                 {
-                    Print("+" + item.Name, ConsoleColor.Green);
+                    Print("+" + item.WorkName, ConsoleColor.Green);
                 }
 
                 Print("relog compelted.");
-
             }
             catch (Exception e)
             {
-
                 Print(e.Message, ConsoleColor.Red);
             }
 
