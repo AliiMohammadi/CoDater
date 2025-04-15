@@ -9,7 +9,6 @@ using static SaveSystem.SaveData;
 using System.Security.Policy;
 using CrossUpdater.Cores.ReLogger;
 
-
 namespace CoDater.ReLogger
 {
     internal class Relog
@@ -120,6 +119,7 @@ namespace CoDater.ReLogger
                 DownloadFile(new Url(ConvertFileNameToGitHubRawLink(RepositoryURL,item)), item);
         }
 
+        #region local Functions
         void AddIfNotExist(List<FileInfo> list ,FileState file )
         {
             if (!list.Exists(x => x.WorkName == file.WorkName))
@@ -127,8 +127,7 @@ namespace CoDater.ReLogger
         }
         void DeleteIfExist(FileInfo file)
         {
-            string fileworkpath = file.WorkName.Remove(0, file.WorkName.IndexOf(workspace.WorkDirectory.Name) + workspace.WorkDirectory.Name.Length);
-            string path = workspace.WorkDirectory.FullName + fileworkpath;
+            string path = ConvertToCurrentWorkDirectory(file);
 
             if (System.IO.File.Exists(path))
                 System.IO.File.Delete(path);
@@ -137,8 +136,7 @@ namespace CoDater.ReLogger
         {
             try
             {
-                string fileworkpath = file.WorkName.Remove(0, file.WorkName.IndexOf(workspace.WorkDirectory.Name) + workspace.WorkDirectory.Name.Length);
-                string path = workspace.WorkDirectory.FullName + fileworkpath;
+                string path = ConvertToCurrentWorkDirectory(file);
 
                 string directo = System.IO.Path.GetDirectoryName(path);
 
@@ -158,7 +156,6 @@ namespace CoDater.ReLogger
             string fileworkpath = file.WorkName.Remove(0, file.WorkName.IndexOf(workspace.WorkDirectory.Name) + workspace.WorkDirectory.Name.Length);
             return workspace.WorkDirectory.FullName + fileworkpath;
         }
-
         string ConvertFileNameToGitHubRawLink(RepositoryURL repolink,FileInfo file)
         {
             string x = file.WorkName;
@@ -172,17 +169,16 @@ namespace CoDater.ReLogger
 
             return x;
         }
-        Url ConvertGitHubUrlFileToRawUrl(RepositoryURL url)
-        {
-            //need to test
-
-            string final = url.Address.Value.Replace(@"https://github.com/", @"https://raw.githubusercontent.com/").Replace("/blob/master/", "/refs/heads/master/");
-            return new Url(final);
-        }
+        #endregion
     }
 }
 
-/*
+/* REPORT PAPER
+ * Features: 
+ * DownloadEvent.
+ * Parallel programing and threads.
+ * Atomic actions.
+ 
 Workdir bugs:
 -Codater.dat file downlaod more than once.
 

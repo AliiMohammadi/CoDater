@@ -90,7 +90,6 @@ namespace CoDater
             {
                 Print(e.Message, ConsoleColor.Red);
             }
-
         }
 
         static void Print(object message, ConsoleColor color)
