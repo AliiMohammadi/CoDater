@@ -2,6 +2,7 @@
 using System.Reflection;
 using System.IO;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace CoDater.Workspace
 {
@@ -17,21 +18,27 @@ namespace CoDater.Workspace
         /// </summary>
         public string GetApplicationBasePath
         {
-                
-            get { return AppDomain.CurrentDomain.BaseDirectory;}
+
+            get { return AppDomain.CurrentDomain.BaseDirectory; }
         }
+        public List<string> IgnoreList;
 
         public WorkSpace()
         {
             WorkDirectory = new DirectoryInfo(GetApplicationBasePath);
+            IgnoreList = new List<string>();
         }
         public WorkSpace(string workdirectory)
         {
             WorkDirectory = new DirectoryInfo(workdirectory);
+            IgnoreList = new List<string>();
+
         }
         public WorkSpace(DirectoryInfo workdirectory)
         {
             WorkDirectory = workdirectory;
+            IgnoreList = new List<string>();
+
         }
 
         /// <summary>
@@ -39,7 +46,20 @@ namespace CoDater.Workspace
         /// <returns></returns>
         public List<FileInfo> GetAllFilesAndSubFolderFiles()
         {
-            return DirSearch(WorkDirectory.FullName);
+            List<FileInfo> files = DirSearch(WorkDirectory.FullName);
+            
+            if(IgnoreList.Count == 0)
+                return files;
+
+            foreach (var item in IgnoreList)
+            {
+                int f = files.IndexOf(files.Where(x => string.Equals(x.Name, item)).First());
+
+                if(f > -1)
+                    files.RemoveAt(f);
+            }
+
+            return files;
         }
         public string WorkName(FileInfo file)
         {

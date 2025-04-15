@@ -8,7 +8,6 @@ using System.Web.Script.Serialization;
 using static SaveSystem.SaveData;
 using System.Security.Policy;
 using CrossUpdater.Cores.ReLogger;
-using System.Data;
 
 
 namespace CoDater.ReLogger
@@ -182,3 +181,9 @@ namespace CoDater.ReLogger
         }
     }
 }
+
+/*
+Workdir bugs:
+-Codater.dat file downlaod more than once.
+
+ */
